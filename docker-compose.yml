@@ -1,0 +1,24 @@
+services:
+  signaling-server:
+    build:
+      context: ./server
+    container_name: signaling-server
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    command: node index.js
+
+  asterisk:
+    build: .
+    container_name: debian-asterisk
+    platform: linux/amd64
+    network_mode: bridge
+    ports:
+      - "5060:5060/udp"
+      - "5066:5066/tcp"
+      - "8088:8088"
+      - "10000-10100:10000-10100/udp"
+    volumes:
+        - ./etc:/etc
+    restart: unless-stopped

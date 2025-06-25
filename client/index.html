@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SIP Client</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #1a002b;
+            color: #fff;
+        }
+
+        h2, h3 {
+            text-align: center;
+        }
+
+        #loginModal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        #loginBox {
+            background-color: #2d0147;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #8000ff;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 300px;
+        }
+
+        #loginBox input {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #3d015c;
+            color: white;
+        }
+
+        #loginBox button {
+            padding: 10px;
+            background-color: #8000ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #app {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #user-list {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        #user-list button {
+            background-color: #5d00a3;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #user-list button:hover {
+            background-color: #8000ff;
+        }
+
+        #videoContainer {
+            display: none;
+            flex-direction: row;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        video {
+            width: 45%;
+            max-width: 500px;
+            border-radius: 10px;
+            border: 2px solid #8000ff;
+            background-color: #000;
+        }
+
+        #endCall {
+            background: crimson;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="loginModal">
+    <div id="loginBox">
+        <h2>Login to SIP</h2>
+        <input id="sip" placeholder="SIP ID" value="6001">
+        <input id="pass" type="password" placeholder="Password" value="1234">
+        <button onclick="login()">Login</button>
+    </div>
+</div>
+
+<div id="app">
+    <h2>Available Users</h2>
+    <div id="user-list"></div>
+    <button id="endCall">End Call</button>
+
+    <div id="videoContainer">
+        <video id="localVideo" autoplay muted playsinline></video>
+        <video id="remoteVideo" autoplay playsinline></video>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jssip/dist/jssip.min.js"></script>
+<script src="app.js"></script>
+
+<script>
+    const loginModal = document.getElementById('loginModal');
+    const app = document.getElementById('app');
+    const videoContainer = document.getElementById('videoContainer');
+
+    function login() {
+        loginModal.style.display = 'none';
+        app.style.display = 'flex';
+
+        if (typeof window.sipLogin === 'function') {
+            window.sipLogin();
+        }
+    }
+
+    // Обработка отображения видео при звонке
+    window.showVideo = function () {
+        videoContainer.style.display = 'flex';
+    };
+</script>
+
+</body>
+</html>
