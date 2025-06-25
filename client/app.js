@@ -17,7 +17,7 @@ remoteVideo.onerror = (err) => {
 };
 
 function sipLogin() {
-    JsSIP.debug.enable('JsSIP:*');
+    // JsSIP.debug.enable('JsSIP:*');
 
     const configuration = {
         uri: 'sip:' + sip.value + '@172.17.0.1',
@@ -39,24 +39,24 @@ function sipLogin() {
         console.log('New session:', session);
 
         if (session.direction === 'incoming') {
-            if (confirm("Incoming call from " + session.remote_identity.uri.user + ". Accept?")) {
+            showIncomingCallModal(session.remote_identity.uri.user, () => {
                 navigator.mediaDevices.getUserMedia({ audio: true, video: true })
                     .then(stream => {
                         localVideo.srcObject = stream;
+
+                        if (window.showVideo) window.showVideo();
 
                         session.answer({
                             mediaStream: stream,
                             mediaConstraints: { audio: true, video: true }
                         });
 
-                        if (window.showVideo) window.showVideo();
-
                         bindRemoteStream(session);
                         currentSession = session;
                     });
-            } else {
+            }, () => {
                 session.terminate();
-            }
+            });
         }
     });
 
@@ -123,6 +123,36 @@ function bindRemoteStream(session) {
         }
     });
 }
+
+function showIncomingCallModal(caller, onAccept, onReject) {
+    const modal = document.getElementById('incoming-call-modal');
+    const text = document.getElementById('incoming-call-text');
+    const acceptBtn = document.getElementById('accept-call');
+    const rejectBtn = document.getElementById('reject-call');
+
+    text.textContent = `Входящий вызов от ${caller}`;
+    modal.style.display = 'flex';
+
+    function cleanup() {
+        modal.style.display = 'none';
+        acceptBtn.removeEventListener('click', handleAccept);
+        rejectBtn.removeEventListener('click', handleReject);
+    }
+
+    function handleAccept() {
+        cleanup();
+        onAccept();
+    }
+
+    function handleReject() {
+        cleanup();
+        onReject();
+    }
+
+    acceptBtn.addEventListener('click', handleAccept);
+    rejectBtn.addEventListener('click', handleReject);
+}
+
 
 function resetVideoUI() {
     if (localVideo.srcObject) {

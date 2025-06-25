@@ -127,6 +127,15 @@
     </div>
 </div>
 
+<div id="incoming-call-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 9999;">
+    <div style="background: #fff; padding: 20px 30px; border-radius: 10px; text-align: center; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
+        <p id="incoming-call-text" style="color: initial; margin-bottom: 20px; font-size: 18px;"></p>
+        <button id="accept-call" style="margin-right: 10px; padding: 10px 20px;">Принять</button>
+        <button id="reject-call" style="padding: 10px 20px;">Отклонить</button>
+    </div>
+</div>
+
 <div id="app">
     <h2>Available Users</h2>
     <div id="user-list"></div>
@@ -140,7 +149,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jssip/dist/jssip.min.js"></script>
-<script src="app.js"></script>
+<script src="app.js?cache=1"></script>
 
 <script>
     const loginModal = document.getElementById('loginModal');
